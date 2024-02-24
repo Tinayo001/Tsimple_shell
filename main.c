@@ -1,4 +1,15 @@
 #include "main.h"
+#include "fork.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "execmd.h"
+/**
+ * main - entry point
+ * @ac: number of arguments
+ * @argv: argument vector
+ * Return: 0 (Success)
+ */
 
 int main(int ac, char **argv)
 {
@@ -11,7 +22,8 @@ int main(int ac, char **argv)
 	int numb_tokens = 0;
 	int  i;
 
-	(void)ac; (void)argv;
+	(void)ac;
+	(void)argv;
 
 	while (1)
 	{
