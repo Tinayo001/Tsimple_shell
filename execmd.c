@@ -1,3 +1,4 @@
+#include "main.h"
 #include "execmd.h"
 #include <stdio.h>
 #include <stdlib.h>

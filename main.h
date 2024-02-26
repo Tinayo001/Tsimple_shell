@@ -12,5 +12,6 @@ void execmd(char **argv);
 void execute_command(char **argv);
 char *my_getline(void);
 int is_builtin_command(char *command);
+void execmd(char **argv);
 
 #endif

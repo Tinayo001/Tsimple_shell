@@ -4,6 +4,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include "execmd.h"
+
+char *allocate_memory_for_file(size_t size)
+{
+	char *file_data = malloc(size);
+	if (file_data == NULL)
+	{
+		perror("Error: Memory allocation failed");
+		exit(EXIT_FAILURE);
+	}
+	return (file_data);
+}
+void deallocate_memory_for_file(char *file_data)
+{
+	free(file_data);
+}
+void free_memory(char *lineptr)
+{
+	free(lineptr);
+}
 /**
  * main - entry point
  * @ac: number of arguments
@@ -65,10 +84,15 @@ int main(int ac, char **argv)
 		argv[i] = NULL;
 
 		execmd(argv);
-	}
+		for (i = 0; i < numb_tokens; i++)
+		{
+			free(argv[i]);
+		}
+		free(argv);
 
-	free(lineptr);
-	lineptr = NULL;
+		deallocate_memory_for_file(lineptr_copy);
+	}
+	free_memory(lineptr);
 
 	return (0);
 }
