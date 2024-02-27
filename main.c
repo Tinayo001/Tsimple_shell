@@ -10,6 +10,7 @@
 void tokenize(char *command, char **args);
 void handle_exit_arg(char *command);
 void handle_environment(char *command);
+extern char **environ;
 
 char *allocate_memory_for_file(size_t size)
 {
