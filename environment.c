@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * handle_environmen - function that hanndles the environment
+ * @command: command to be checked
+ */
 void handle_environmen(char *command)
 {
 	char *operation = strtok(command, " ");
@@ -47,6 +51,7 @@ void handle_environmen(char *command)
 	{
 		extern char **environ;
 		char **env;
+
 		for (env = environ; *env != NULL; env++)
 		{
 			printf("%s\n", *env);

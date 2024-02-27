@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #define MAX_ARGS 10
 #define MAX_COMMAND_LENGTH 100
@@ -10,11 +11,17 @@
 void tokenize(char *command, char **args);
 void handle_exit_arg(char *command);
 void handle_environment(char *command);
-extern char **environ;
+
+/**
+ * allocate_memory_for_file - function that allocates memory to a file
+ * @size: size of memory to allocate
+ * Return: returns file_data on success
+ */
 
 char *allocate_memory_for_file(size_t size)
 {
 	char *file_data = malloc(size);
+
 	if (file_data == NULL)
 	{
 		perror("Error: Memory allocation failed");
@@ -22,18 +29,33 @@ char *allocate_memory_for_file(size_t size)
 	}
 	return (file_data);
 }
+/**
+ * deallocate_memory_for_file - function that dealloactes memory on a file
+ * @file_data: file to check
+ */
+
 void deallocate_memory_for_file(char *file_data)
 {
 	free(file_data);
 }
+/**
+ * free_memory - function that frees memory
+ * @lineptr: pointer to check
+ */
+
 void free_memory(char *lineptr)
 {
 	free(lineptr);
 }
-void handle_exit()
+/**
+ * handle_exit - function that handles file exit
+ * Return: 0 (Success)
+ */
+
+void handle_exit(void)
 {
-        printf("Exiting shell...\n");
-        exit(EXIT_SUCCESS);
+	printf("\tExiting shell...\n");
+	exit(EXIT_SUCCESS);
 }
 
 /**
@@ -43,81 +65,66 @@ void handle_exit()
  */
 int main(void)
 {
-    char command[MAX_COMMAND_LENGTH];
-    pid_t pid;
-    char *args[MAX_ARGS + 1];
-    int status;
+	char command[MAX_COMMAND_LENGTH];
+	pid_t pid;
+	char *args[MAX_ARGS + 1];
+	int status;
 
-    while (1)
-    {
-        printf("(Tshell) $ ");
-        if (fgets(command, sizeof(command), stdin) == NULL)
+	while (1)
 	{
-		if  (feof(stdin))
+		printf("(Tshell) $ ");
+		if (fgets(command, sizeof(command), stdin) == NULL)
+		{
+			break;
+		}
+		command[strcspn(command, "\n")] = '\0';
+
+		command[MAX_COMMAND_LENGTH - 1] = '\0';
+
+		if (strncmp(command, "exit ", strlen("exit ")) == 0)
 		{
 			printf("Exiting shell...\n");
-			exit(EXIT_SUCCESS);
+			handle_exit_arg(command);
+			break;
+		}
+		tokenize(command, args);
+		pid = fork();
+
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		if (pid == 0)
+		{
+			execvp(args[0], args);
+			perror("execvp");
+			exit(EXIT_FAILURE);
 		}
 		else
 		{
-			perror("fgets");
-			exit(EXIT_FAILURE);
+			wait(&status);
+			if (WIFEXITED(status))
+			{
+				printf("Exit status: %d\n", WEXITSTATUS(status));
+			}
 		}
 	}
-
-
-        /* Remove trailing newline character */
-        command[strcspn(command, "\n")] = '\0';
-
-        /* Check if command is "exit" */
-        if (strncmp(command, "exit ", 5) == 0)
-        {
-            printf("Calling handle_exit_arg function...\n");
-            handle_exit_arg(command);
-            continue;
-        }
-        else if (strcmp(command, "exit") == 0)
-        {
-            exit(EXIT_SUCCESS);
-        }
-	/* Tokenize the command using the custom tokenizer */
-        tokenize(command, args);
-
-        /* Fork a child process */
-        pid = fork();
-        if (pid == -1)
-        {
-            perror("fork");
-            exit(EXIT_FAILURE);
-        }
-
-        if (pid == 0)
-        {
-            /* Child process */
-            /* Execute command */
-            execvp(args[0], args);
-            /* If execvp returns, it must have failed */
-            perror("execvp");
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            /* Parent process */
-            /* Wait for child to complete */
-            wait(&status);
-            if (WIFEXITED(status))
-            {
-                printf("Exit status: %d\n", WEXITSTATUS(status));
-            }
-        }
-    }
-
-    return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }
+
+/**
+ * tokenize - function that tokenizes commands
+ * @command: command to check
+ * @args: arguments vector
+ */
+
 void tokenize(char *command, char **args)
 {
 	int i = 0;
 	char *token = strtok(command, " ");
+
+
 	while (token != NULL && i < MAX_ARGS)
 	{
 		args[i++] = token;
@@ -125,10 +132,17 @@ void tokenize(char *command, char **args)
 	}
 	args[i] = NULL;
 }
+/**
+ * handle_exit_arg - function that handles exit of a command
+ * @command: command to be checked
+ */
+
 void handle_exit_arg(char *command)
 {
 	char *arg = strtok(command, " ");
+
 	arg = strtok(NULL, " ");
+
 	if (arg != NULL)
 	{
 		exit(atoi(arg));

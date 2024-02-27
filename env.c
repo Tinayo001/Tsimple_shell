@@ -1,4 +1,4 @@
-#include <unistd.h> /* Include <unistd.h> for access to environment variables */
+#include <unistd.h>
 #include "main.h"
 
 /**
