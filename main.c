@@ -23,6 +23,12 @@ void free_memory(char *lineptr)
 {
 	free(lineptr);
 }
+void handle_exit()
+{
+        printf("Exiting shell...\n");
+        exit(EXIT_SUCCESS);
+}
+
 /**
  * main - entry point
  * @ac: number of arguments
