@@ -21,5 +21,7 @@ void handle_exit_command(char *command);
 void handle_env_command(void);
 void handle_exit_arg(char *command);
 void handle_environment(char *command);
+void handle_error(const char *msg);
+int parse_and_execute_main(void);
 
 #endif
