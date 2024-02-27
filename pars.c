@@ -8,8 +8,14 @@
 #define MAX_ARGS 10
 #define MAX_COMMAND_LENGTH 100
 
-void parse_and_execute_command(char *command);
-
+/**
+ * parse_and_execute_main - Main function to parse and execute commands.
+ *
+ * This function reads commands from the user, parses them, and executes them.
+ * It continues to prompt the user for commands until the "exit" command is entered.
+ *
+ * Return: Returns EXIT_SUCCESS when the user enters "exit".
+ */
 int parse_and_execute_main(void)
 {
 	char command[MAX_COMMAND_LENGTH];
@@ -23,12 +29,19 @@ int parse_and_execute_main(void)
 
 		if (strcmp(command, "exit") == 0)
 		{
-			exit(EXIT_SUCCESS);
+			return (EXIT_SUCCESS);
 		}
 		parse_and_execute_command(command);
 	}
-	return EXIT_SUCCESS;
 }
+
+/**
+ * parse_and_execute_command - Parse and execute a single command.
+ * @command: The command string to be parsed and executed.
+ *
+ * This function takes a command string, parses it into arguments,
+ * and executes the command using execvp().
+ */
 void parse_and_execute_command(char *command)
 {
 	char *args[MAX_ARGS + 1];
@@ -48,7 +61,7 @@ void parse_and_execute_command(char *command)
 	if (arg_count > 0)
 	{
 		pid = fork();
-		
+
 		if (pid == -1)
 		{
 			perror("fork");
@@ -56,7 +69,7 @@ void parse_and_execute_command(char *command)
 		}
 		if (pid == 0)
 		{
-			if (execvp(args[9], args) == -1)
+			if (execvp(args[0], args) == -1)
 			{
 				perror("execp");
 				exit(EXIT_FAILURE);
