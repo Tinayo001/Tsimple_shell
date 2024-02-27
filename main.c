@@ -7,6 +7,10 @@
 #define MAX_ARGS 10
 #define MAX_COMMAND_LENGTH 100
 
+void tokenize(char *command, char **args);
+void handle_exit_arg(char *command);
+void handle_environment(char *command);
+
 char *allocate_memory_for_file(size_t size)
 {
 	char *file_data = malloc(size);
@@ -46,7 +50,20 @@ int main(void)
     while (1)
     {
         printf("(Tshell) $ ");
-        fgets(command, sizeof(command), stdin);
+        if (fgets(command, sizeof(command), stdin) == NULL)
+	{
+		if  (feof(stdin))
+		{
+			printf("Exiting shell...\n");
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			perror("fgets");
+			exit(EXIT_FAILURE);
+		}
+	}
+
 
         /* Remove trailing newline character */
         command[strcspn(command, "\n")] = '\0';
@@ -62,8 +79,7 @@ int main(void)
         {
             exit(EXIT_SUCCESS);
         }
-
-        /* Tokenize the command using the custom tokenizer */
+	/* Tokenize the command using the custom tokenizer */
         tokenize(command, args);
 
         /* Fork a child process */
@@ -96,4 +112,28 @@ int main(void)
     }
 
     return EXIT_SUCCESS;
+}
+void tokenize(char *command, char **args)
+{
+	int i = 0;
+	char *token = strtok(command, " ");
+	while (token != NULL && i < MAX_ARGS)
+	{
+		args[i++] = token;
+		token = strtok(NULL, " ");
+	}
+	args[i] = NULL;
+}
+void handle_exit_arg(char *command)
+{
+	char *arg = strtok(command, " ");
+	arg = strtok(NULL, " ");
+	if (arg != NULL)
+	{
+		exit(atoi(arg));
+	}
+	else
+	{
+		printf("Usage: exit [status]\n");
+	}
 }

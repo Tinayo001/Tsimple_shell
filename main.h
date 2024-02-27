@@ -16,10 +16,10 @@ int is_builtin_command(char *command);
 void execmd(char **argv);
 
 void handle_exit();
-
+void parse_and_execute_command(char *command);
 void handle_exit_command(char *command);
 void handle_env_command(void);
-int tokenize(const char *command, char *args[]);
 void handle_exit_arg(char *command);
+void handle_environment(char *command);
 
 #endif
