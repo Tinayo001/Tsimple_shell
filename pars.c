@@ -9,7 +9,14 @@
 #define MAX_COMMAND_LENGTH 100
 
 void parse_and_execute_command(char *command);
-
+/**
+ * parse_and_execute_main - Main function to parse and execute commands
+ *
+ * This function continuously prompts the user for input commands,
+ * executes them, and repeats until the user enters exit
+ *
+ * Return: 0 (Success)
+ */
 int parse_and_execute_main(void)
 {
 	char command[MAX_COMMAND_LENGTH];
@@ -27,8 +34,14 @@ int parse_and_execute_main(void)
 		}
 		parse_and_execute_command(command);
 	}
-	return EXIT_SUCCESS;
+	return (EXIT_SUCCESS);
 }
+/**
+ * parse_and_execute_command - function that parses and executes a command
+ * @command: command to be checked
+ * Return: 0 (Success)
+ */
+
 void parse_and_execute_command(char *command)
 {
 	char *args[MAX_ARGS + 1];
@@ -48,7 +61,7 @@ void parse_and_execute_command(char *command)
 	if (arg_count > 0)
 	{
 		pid = fork();
-		
+
 		if (pid == -1)
 		{
 			perror("fork");
