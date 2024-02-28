@@ -5,7 +5,7 @@
  */
 void display_prompt(void)
 {
-    printf("#Tshell$ ");
+	printf("Tshell$");
 }
 
 /**
@@ -14,11 +14,11 @@ void display_prompt(void)
  */
 void read_command(char *command)
 {
-    fgets(command, MAX_COMMAND_LENGTH, stdin);
-    if (feof(stdin))
-    {
-        printf("\n");
-        exit(EXIT_SUCCESS);
-    }
-    command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
+	fgets(command, MAX_COMMAND_LENGTH, stdin);
+	if (feof(stdin))
+	{
+		printf("\n");
+		exit(EXIT_SUCCESS);
+	}
+	command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
 }
