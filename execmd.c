@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
+
 /**
  * execmd - function thats executes a command
  * @argv: pointer to a pointer of arguments
  */
-
 void execmd(char **argv)
 {
 	if (execvp(argv[0], argv) == -1)

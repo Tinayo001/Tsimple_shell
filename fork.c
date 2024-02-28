@@ -8,9 +8,9 @@
  * execute_command - executes commands
  * @argv: pointer to pointer of arguments
  */
-
 void execute_command(char **argv)
 {
+<<<<<<< HEAD
 	pid_t pid = fork();
 
 	if (pid == -1)
@@ -30,6 +30,28 @@ void execute_command(char **argv)
 	{
 		int status;
 
+=======
+	/* Declaration moved to the beginning of the function */
+	int status;
+
+	pid_t pid = fork();
+
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if (execvp(argv[0], argv) == -1)
+		{
+			perror("execvp");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+>>>>>>> a8b8e6666ca0e91238b3fce163d2df8e62a852fa
 		waitpid(pid, &status, 0);
 	}
 }
