@@ -14,7 +14,8 @@ void parse_and_execute_command(char *command);
  * parse_and_execute_main - Main function to parse and execute commands.
  *
  * This function reads commands from the user, parses them, and executes them.
- * It continues to prompt the user for commands until the "exit" command is entered.
+ * It continues to prompt the user for commands until the "exit"
+ * command is entered.
  *
  * Return: Returns EXIT_SUCCESS when the user enters "exit".
  */

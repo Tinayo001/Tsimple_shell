@@ -7,17 +7,16 @@
 
 void handle_exit_arg(char *command)
 {
-        char *arg = strtok(command, " ");
+	char *arg = strtok(command, " ");
 
-        arg = strtok(NULL, " ");
+	arg = strtok(NULL, " ");
 
-        if (arg != NULL)
-        {
-                exit(atoi(arg));
-        }
-        else
-        {
-                printf("Usage: exit [status]\n");
-        }
+	if (arg != NULL)
+	{
+		exit(atoi(arg));
+	}
+	else
+	{
+		printf("Usage: exit [status]\n");
+	}
 }
-   
