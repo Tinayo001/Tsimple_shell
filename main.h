@@ -12,5 +12,6 @@
 void display_prompt(void);
 void read_command(char *command);
 void execute_command(char *command);
+void execmd(char *command);
 
 #endif
