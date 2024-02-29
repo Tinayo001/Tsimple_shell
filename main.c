@@ -1,114 +1,77 @@
-#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <string.h>
+#include <unistd.h>
 
-#define MAX_ARGS 10
-#define MAX_COMMAND_LENGTH 100
-
-void tokenize(char *command, char **args);
-void handle_exit_arg(char *command);
-void handle_environment(char *command);
-
-/**
- * allocate_memory_for_file - function that allocates memory to a file
- * @size: size of memory to allocate
- * Return: returns file_data on success
- */
-
-char *allocate_memory_for_file(size_t size)
-{
-	char *file_data = malloc(size);
-
-	if (file_data == NULL)
-	{
-		perror("Error: Memory allocation failed");
-		exit(EXIT_FAILURE);
-	}
-	return (file_data);
-}
-/**
- * deallocate_memory_for_file - function that dealloactes memory on a file
- * @file_data: file to check
- */
-
-void deallocate_memory_for_file(char *file_data)
-{
-	free(file_data);
-}
-/**
- * free_memory - function that frees memory
- * @lineptr: pointer to check
- */
-
-void free_memory(char *lineptr)
-{
-	free(lineptr);
-}
-/**
- * handle_exit - function that handles file exit
- * Return: 0 (Success)
- */
-
-void handle_exit(void)
-{
-	printf("\tExiting shell...\n");
-	exit(EXIT_SUCCESS);
-}
-
-/**
- * main - Entry point for the shell program
- *
- * Return: Always 0.
- */
 int main(void)
 {
-	char command[MAX_COMMAND_LENGTH];
-	pid_t pid;
-	char *args[MAX_ARGS + 1];
-	int status;
+	char *full_command = NULL, *copy_command = NULL;
+	size_t n = 0;
+	ssize_t tchars_read;
+	char *token;
+	const char *delim = "\n";
+	char **argv;
+	int i = 0;
+	int numb_tokens = 0;
 
-	while (1)
+	printf("$ ");
+
+	tchars_read = getline(&full_command, &n, stdin);
+
+	if (tchars_read == -1)
 	{
-		printf("(Tshell) $ ");
-		if (fgets(command, sizeof(command), stdin) == NULL)
-		{
-			break;
-		}
-		command[strcspn(command, "\n")] = '\0';
-
-		command[MAX_COMMAND_LENGTH - 1] = '\0';
-
-		if (strncmp(command, "exit ", strlen("exit ")) == 0)
-		{
-			printf("Exiting shell...\n");
-			handle_exit_arg(command);
-			break;
-		}
-		tokenize(command, args);
-		pid = fork();
-
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(EXIT_FAILURE);
-		}
-		if (pid == 0)
-		{
-			execvp(args[0], args);
-			perror("execvp");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			wait(&status);
-			if (WIFEXITED(status))
-			{
-				printf("Exit status: %d\n", WEXITSTATUS(status));
-			}
-		}
+		printf("Exiting shell...\n");
+		return (-1);
 	}
-	return (EXIT_SUCCESS);
+
+	copy_command = malloc(sizeof(char) * tchars_read);
+
+	if (copy_command == NULL)
+	{
+		perror("tsh: memory allocation error");
+		free(full_command);
+		return (-1);
+	}
+	strcpy(copy_command, full_command);
+	token = strtok(full_command, delim);
+
+
+
+	while (token != NULL)
+	{
+		numb_tokens++;
+		token = strtok(NULL, delim);
+	}
+	numb_tokens++;
+
+	argv = malloc(sizeof(char *) * numb_tokens);
+	
+	if (argv == NULL)
+	{
+		perror("tsh: memory allocation error");
+		free(full_command);
+		free(copy_command);
+		return (-1);
+	}
+	token = strtok(copy_command, delim);
+
+	for (i = 0; token != NULL; i++)
+	{
+		argv[i] = malloc(sizeof(char) * strlen(token));
+		strcpy(argv[i], token);
+
+		token = strtok(NULL, delim);
+	}
+	argv[i] = NULL;
+
+	for (i = 0; i < numb_tokens; i++)
+	{
+		free(argv[i]);
+	}
+
+	free(argv);
+	free(full_command);
+	free(copy_command);
+
+	return (0);
 }
