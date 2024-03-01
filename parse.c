@@ -1,4 +1,6 @@
 #include "shell.h"
+#include <string.h>
+#include <stdlib.h>
 
 /**
  * parse_command - Parse the command into arguments
@@ -7,6 +9,15 @@
  */
 void parse_command(char *command, char *args[])
 {
-	args[0] = command;
-	args[1] = NULL;
+	const char delim[] = " \t\n";
+	char *token;
+	int i = 0;
+
+	token = strtok(command, delim);
+	while (token != NULL && i < MAX_ARGS - 1)
+	{
+		args[i++] = token;
+		token = strtok(NULL, delim);
+	}
+	args[i] = NULL;
 }
