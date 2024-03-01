@@ -1,13 +1,14 @@
 #include "shell.h"
-#include <stdio.h>
+#include <unistd.h>  /* for write */
+#include <stdlib.h>  /* for _exit */
 
 /**
  * display_prompt - Displays the prompt for user input.
  */
 void display_prompt(void)
 {
-	printf("Tshell$ ");
-	fflush(stdout);
+	char prompt[] = "Tshell$ ";
+	write(STDOUT_FILENO, prompt, sizeof(prompt) - 1); /* Write prompt to stdout */
 }
 
 /**
@@ -16,11 +17,20 @@ void display_prompt(void)
  */
 void read_command(char *command)
 {
-	fgets(command, MAX_COMMAND_LENGTH, stdin);
-	if (feof(stdin))
+	ssize_t bytes_read;
+
+	bytes_read = read(STDIN_FILENO, command, MAX_COMMAND_LENGTH);
+	if (bytes_read == -1)
 	{
-		printf("\n");
-		exit(EXIT_SUCCESS);
+		perror("read"); /* Print error message */
+		_exit(EXIT_FAILURE); /* Exit the shell with failure status */
 	}
-	command[strcspn(command, "\n")] = '\0';
+	else if (bytes_read == 0)
+	{
+		/* End of file condition */
+		write(STDOUT_FILENO, "\n", 1); /* Print newline */
+		_exit(EXIT_SUCCESS); /* Exit the shell with success status */
+	}
+
+	command[bytes_read - 1] = '\0'; /* Remove newline character */
 }
