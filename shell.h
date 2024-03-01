@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef SHELL_H
+#define SHELL_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +12,5 @@
 void display_prompt(void);
 void read_command(char *command);
 void execute_command(char *command);
-void execmd(char *command);
 
 #endif

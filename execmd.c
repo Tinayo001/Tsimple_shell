@@ -1,30 +1,17 @@
-#include "main.h"
+#include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 /**
- * execmd - Execute a shell command with arguments
- * @command: The command to execute
+ * execute_command - Executes the given command.
+ * @command: The command to execute.
  */
-void execmd(char *command)
+void execute_command(char *command)
 {
 	pid_t pid;
 	int status;
-	char *args[MAX_COMMAND_LENGTH];
-	char *token;
-	int i = 0;
-
-	token = strtok(command, " ");
-	while (token != NULL && i < MAX_COMMAND_LENGTH - 1)
-	{
-		args[i++] = token;
-		token = strtok(NULL, " ");
-	}
-	args[i] = NULL;
-
-	if (strcmp(args[0], "exit") == 0)
-	{
-		printf("Exiting shell...\n");
-		exit(EXIT_SUCCESS);
-	}
 
 	pid = fork();
 	if (pid == -1)
@@ -35,10 +22,9 @@ void execmd(char *command)
 	else if (pid == 0)
 	{
 		/* Child process */
-		if (execvp(args[0], args) == -1)
+		if (execlp(command, command, (char *)NULL) == -1)
 		{
-			/* Command not found, display error message */
-			perror("execvp");
+			perror("execlp");
 			exit(EXIT_FAILURE);
 		}
 	}
