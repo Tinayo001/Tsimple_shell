@@ -5,5 +5,5 @@
  */
 void display_prompt(void)
 {
-	write(STDOUT_FILENO, "Tshell$ ", 8);
+	write(STDOUT_FILENO, "$ ", 8);
 }
