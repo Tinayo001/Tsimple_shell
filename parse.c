@@ -1,6 +1,4 @@
 #include "shell.h"
-#include <string.h>
-#include <stdlib.h>
 
 /**
  * parse_command - Parse the command into arguments

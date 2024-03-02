@@ -30,5 +30,7 @@ void execute_command(char *args[])
 			perror("waitpid");
 			exit(EXIT_FAILURE);
 		}
+
+		exit(EXIT_SUCCESS);
 	}
 }
