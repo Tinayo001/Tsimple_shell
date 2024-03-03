@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <string.h>
 
 /**
  * execute_command - Executes a command
@@ -6,7 +7,14 @@
  */
 void execute_command(char *args[])
 {
-	pid_t pid = fork();
+	pid_t pid;
+
+	if (args[0] == NULL || strcmp(args[0], "") == 0)
+	{
+		return;
+	}
+
+	pid = fork();
 
 	if (pid == -1)
 	{
