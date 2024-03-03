@@ -1,8 +1,6 @@
 #include "shell.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
 
 /**
@@ -15,8 +13,6 @@ int main(void)
 	char command[MAX_COMMAND_LENGTH];
 	char *args[MAX_ARGS];
 	bool interactive = isatty(STDIN_FILENO);
-	char *trimmed_command;
-	size_t len;
 
 	while (1)
 	{
@@ -29,7 +25,7 @@ int main(void)
 			{
 				if (interactive)
 					write(STDOUT_FILENO, "\n", 1);
-				continue;
+				break;
 			}
 			else
 			{
@@ -38,19 +34,12 @@ int main(void)
 			}
 		}
 
-		trimmed_command = command;
-		while (*trimmed_command && strchr(" \t\n", *trimmed_command))
-			trimmed_command++;
-		len = strlen(trimmed_command);
-		while (len > 0 && strchr(" \t\n", trimmed_command[len - 1]))
-			trimmed_command[--len] = '\0';
-
-		if (strlen(trimmed_command) == 0)
-			continue;
-
-		parse_command(trimmed_command, args);
+		command[strcspn(command, "\n")] = '\0';
+		parse_command(command, args);
 		execute_command(args);
 	}
 
 	return (0);
 }
+
+
