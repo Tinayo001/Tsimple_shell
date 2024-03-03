@@ -1,3 +1,4 @@
+#include "shell.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
