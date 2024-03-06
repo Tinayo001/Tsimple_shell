@@ -10,39 +10,36 @@
  */
 void execute_command(char *args[])
 {
-        pid_t pid;
+	pid_t pid;
 
-        
-        if (access(args[0], X_OK) == -1) {
-                
-                perror("access");
-                fprintf(stderr, "Command not found: %s\n", args[0]);
-                exit(EXIT_FAILURE);
-        }
+	if (access(args[0], X_OK) == -1)
+	{
+		perror("access");
+		fprintf(stderr, "Command not found: %s\n", args[0]);
+		exit(EXIT_FAILURE);
+	}
 
-        
-        pid = fork();
-        if (pid == -1)
-        {
-                perror("fork");
-                exit(EXIT_FAILURE);
-        }
-        else if (pid == 0)
-        {
-                if (execve(args[0], args, NULL) == -1)
-                {
-                        perror("execve");
-                        exit(EXIT_FAILURE);
-                }
-        }
-        else
-        {
-                int status;
-
-                if (waitpid(pid, &status, 0) == -1)
-                {
-                        perror("waitpid");
-                        exit(EXIT_FAILURE);
-                }
-        }
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (pid == 0)
+	{
+		if (execve(args[0], args, NULL) == -1)
+		{
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		int status;
+		if (waitpid(pid, &status, 0) == -1)
+		{
+			perror("waitpid");
+			exit(EXIT_FAILURE);
+		}
+	}
 }
