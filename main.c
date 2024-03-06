@@ -10,36 +10,34 @@
  */
 int main(void)
 {
-	char command[MAX_COMMAND_LENGTH];
-	char *args[MAX_ARGS];
-	bool interactive = isatty(STDIN_FILENO);
+        char command[MAX_COMMAND_LENGTH];
+        char *args[MAX_ARGS];
+        bool interactive = isatty(STDIN_FILENO);
 
-	while (1)
-	{
-		if (interactive)
-			display_prompt();
+        while (1)
+        {
+                if (interactive)
+                        display_prompt();
 
-		if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
-		{
-			if (feof(stdin))
-			{
-				if (interactive)
-					write(STDOUT_FILENO, "\n", 1);
-				break;
-			}
-			else
-			{
-				perror("fgets");
-				exit(EXIT_FAILURE);
-			}
-		}
+                if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+                {
+                        if (feof(stdin))
+                        {
+                                if (interactive)
+                                        write(STDOUT_FILENO, "\n", 1);
+                                break;
+                        }
+                        else
+                        {
+                                perror("fgets");
+                                exit(EXIT_FAILURE);
+                        }
+                }
 
-		command[strcspn(command, "\n")] = '\0';
-		parse_command(command, args);
-		execute_command(args);
-	}
+                command[strcspn(command, "\n")] = '\0';
+                parse_command(command, args);
+                execute_command(args);
+        }
 
-	return (0);
+        return (0);
 }
-
-
