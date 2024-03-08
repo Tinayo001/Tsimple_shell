@@ -11,13 +11,10 @@
  */
 void parse_command(char *command, char *args[])
 {
-	/* Use tabs for indentation */
 	const char delim[] = " \t\n";
 	char *token;
 	int i = 0;
-	char error_message[1024];
 
-	/* Add a blank line after declarations */
 	token = strtok(command, delim);
 	while (token != NULL && i < MAX_ARGS - 1)
 	{
@@ -45,8 +42,6 @@ void parse_command(char *command, char *args[])
 			dir = strtok(NULL, ":");
 		}
 
-		snprintf(error_message, sizeof(error_message), "Command not found: %s\n", args[0]);
-		write(STDERR_FILENO, error_message, strlen(error_message));
 		free(path);
 		return;
 	}
