@@ -1,7 +1,9 @@
 #include "shell.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 /**
  * main - Entry point of the simple shell
@@ -13,6 +15,8 @@ int main(void)
 	char command[MAX_COMMAND_LENGTH];
 	char *args[MAX_ARGS];
 	bool interactive = isatty(STDIN_FILENO);
+
+	setenv("PATH", "/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin", 1);
 
 	while (1)
 	{
@@ -36,6 +40,13 @@ int main(void)
 
 		command[strcspn(command, "\n")] = '\0';
 		parse_command(command, args);
+
+
+		if (strcmp(args[0], "exit") == 0)
+		{
+			exit(EXIT_SUCCESS);
+		}
+
 		execute_command(args);
 	}
 

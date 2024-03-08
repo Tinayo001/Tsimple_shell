@@ -1,8 +1,4 @@
 #include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 /**
  * execute_command - Executes a command
@@ -10,16 +6,8 @@
  */
 void execute_command(char *args[])
 {
-	pid_t pid;
+	pid_t pid = fork();
 
-	if (access(args[0], X_OK) == -1)
-	{
-		perror("access");
-		fprintf(stderr, "Command not found: %s\n", args[0]);
-		exit(EXIT_FAILURE);
-	}
-
-	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
@@ -36,6 +24,7 @@ void execute_command(char *args[])
 	else
 	{
 		int status;
+
 		if (waitpid(pid, &status, 0) == -1)
 		{
 			perror("waitpid");
